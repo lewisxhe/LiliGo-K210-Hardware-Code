@@ -92,15 +92,18 @@ def checkRTC():
         rtc = pcf8563.PCF8563(i2c)
         rtc.set_datetime((2020,3,1,0,0,0,3))
 
+    start = utime.ticks_ms()
+
     while button.value():
-        img.clear()
-        t = rtc.datetime()
-        string ='date:'+ str(t[0] + 2000) + '/' + str(t[1]) +'/'+ str(t[2])
-        img.draw_string(0, 0, string, lcd.RED, scale=2)
-        string = 'time:'+str(t[4]) + ':' + str(t[5]) +':'+ str(t[6])
-        img.draw_string(0, 16, string, lcd.RED, scale=2)
-        lcd.display(img)
-        time.sleep(1)
+        if utime.ticks_ms() - start > 1000:
+            start = utime.ticks_ms()
+            img.clear()
+            t = rtc.datetime()
+            string ='date:'+ str(t[0] + 2000) + '/' + str(t[1]) +'/'+ str(t[2])
+            img.draw_string(0, 0, string, lcd.RED, scale=2)
+            string = 'time:'+str(t[4]) + ':' + str(t[5]) +':'+ str(t[6])
+            img.draw_string(0, 16, string, lcd.RED, scale=2)
+            lcd.display(img)
 
 
 def checkMPU6050():
